@@ -8,6 +8,7 @@ from models.subject import Subject
 from models.subject_requirement import SubjectRequirement
 from models.teacher import Teacher
 from services.schedule_creator import create_schedule
+from services.solve_schedule import print_difficulty_report
 
 
 # ==================================================
@@ -387,6 +388,9 @@ else:
     print("СТРЕСС-ТЕСТ НЕ ПРОЙДЕН: смотри ошибки выше.")
 
 print("=" * 60)
+print('ОЦЕНКА СЛОЖНОСТИ ДНЕЙ')
+print('\n' + '=' * 60)
+print_difficulty_report(schedule)
 
 # Полное расписание
 schedule.print_schedule()

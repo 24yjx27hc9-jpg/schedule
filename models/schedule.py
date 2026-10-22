@@ -7,6 +7,19 @@ from models.day import Day
 class Schedule:
     DAYS = 5
     LESSON_PER_DAY = 8
+    SUBJECT_DIFFICULTY = {
+        'Математика': 3,
+        'Русский язык': 3,
+        'Физика': 3,
+        'Химия': 3,
+        'История': 2,
+        'Биология': 2,
+        'Английский язык': 2,
+        'Литература': 1,
+        'Физкультура': 1,
+        'Музыка': 1,
+        'ИЗО': 1,
+    }
     def __init__(self):
         self.lessons : dict[TimeSlot, list[Lesson]] = {}
         self.days = [
@@ -112,6 +125,15 @@ class Schedule:
                 score -= 10
         if self.has_gap(lesson.school_class, slot):
             score -= 100
+        day_difficulty = self.get_day_difficulty(
+            lesson.school_class,
+            slot.day
+        )
+        lesson_difficulty = self.SUBJECT_DIFFICULTY.get(
+            lesson.subject.name,
+            2
+        )
+        score -= day_difficulty * lesson_difficulty
         score -= slot.lesson_number
         return score
 
@@ -152,6 +174,15 @@ class Schedule:
                 ):
                     result.append(slot.day)
         return result
+
+    def get_day_difficulty(self, school_class: SchoolClass, day: Day) -> int:
+        score = 0
+        for lesson in self.get_class_lessons(school_class, day):
+            score += self.SUBJECT_DIFFICULTY.get(
+                lesson.subject.name,
+                2
+            )
+        return score
 
     def print_schedule(self):
         for slot, lessons in self.lessons.items():
